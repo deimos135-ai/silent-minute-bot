@@ -1,25 +1,25 @@
 import asyncio
 import os
-from aiogram import Bot
+from aiogram import Bot, Dispatcher, types
+from aiogram.enums.parse_mode import ParseMode
+from aiogram.filters import Command
 from .scheduler import setup_scheduler
 
-# Отримуємо токен і чат ID з середовища
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 CHAT_ID = os.getenv("CHAT_ID")
 
-# Ініціалізуємо бота
-bot = Bot(token=BOT_TOKEN)
+bot = Bot(token=BOT_TOKEN, parse_mode=ParseMode.HTML)
+dp = Dispatcher()
+
+# Обробник команди /ping
+@dp.message(Command("ping"))
+async def ping_command(message: types.Message):
+    await message.answer("✅ Бот працює! Готовий до розсилки.")
 
 async def main():
-    # Запускаємо планувальник
     await setup_scheduler(bot, CHAT_ID)
-
-    # Лог у консоль (видно в логах Fly.io)
-    print("✅ Silent Minute Bot запущено. Очікуємо запланованих подій...")
-
-    # Нескінченний цикл, щоб контейнер не завершувався
-    while True:
-        await asyncio.sleep(60)
+    print("✅ Silent Minute Bot запущено. Очікуємо запланованих подій та команд...")
+    await dp.start_polling(bot)
 
 if __name__ == "__main__":
     asyncio.run(main())
