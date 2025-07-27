@@ -7,11 +7,5 @@ processes = []
 [env]
   PYTHONUNBUFFERED = "1"
 
-[processes]
-  app = "python -m app.main"
-
 [experimental]
   auto_rollback = true
-
-[deploy]
-  strategy = "rolling"
