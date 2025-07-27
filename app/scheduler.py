@@ -26,3 +26,7 @@ async def setup_scheduler(bot, chat_id):
         args=[bot, chat_id]
     )
     scheduler.start()
+
+# ⬅️ Це додаємо!
+def get_random_message():
+    return random.choice(messages)
