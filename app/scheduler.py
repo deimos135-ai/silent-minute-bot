@@ -15,11 +15,14 @@ messages = [
 ]
 
 async def send_messages(bot, chat_id):
-    msg = random.choice(messages)
-    await bot.send_message(chat_id=chat_id, text=msg)
+    message = random.choice(messages)
+    await bot.send_message(chat_id=chat_id, text=message)
 
 async def setup_scheduler(bot, chat_id):
     scheduler = AsyncIOScheduler(timezone="Europe/Kyiv")
-    trigger = CronTrigger(day_of_week="mon-fri", hour=8, minute=55)
-    scheduler.add_job(send_messages, trigger, args=[bot, chat_id])
+    scheduler.add_job(
+        send_messages,
+        trigger=CronTrigger(day_of_week='mon-fri', hour=8, minute=55),
+        args=[bot, chat_id]
+    )
     scheduler.start()
