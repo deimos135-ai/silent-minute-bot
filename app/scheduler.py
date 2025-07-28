@@ -1,6 +1,7 @@
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
 import random
+import datetime
 
 messages = [
     "🕯 Ранок. Ця хвилина — про них.\nПро тих, завдяки кому ми живі.\n9:00 — хвилина мовчання.",
@@ -14,19 +15,30 @@ messages = [
     "🕛 9:00 — хвилина мовчання. Віддаймо шану тим, хто поклав життя за Україну. 💙💛"
 ]
 
+def get_random_message():
+    return random.choice(messages)
+
 async def send_messages(bot, chat_id):
-    message = random.choice(messages)
-    await bot.send_message(chat_id=chat_id, text=message)
+    now = datetime.datetime.now().strftime('%H:%M:%S')
+    text = get_random_message()
+    print(f"[{now}] Надсилаємо повідомлення в чат {chat_id}")
+    await bot.send_message(chat_id=int(chat_id), text=text)
 
 async def setup_scheduler(bot, chat_id):
     scheduler = AsyncIOScheduler(timezone="Europe/Kyiv")
+
+    # Основне повідомлення о 8:55 (пн-пт)
     scheduler.add_job(
         send_messages,
         trigger=CronTrigger(day_of_week='mon-fri', hour=8, minute=55),
         args=[bot, chat_id]
     )
-    scheduler.start()
 
-# ⬅️ Це додаємо!
-def get_random_message():
-    return random.choice(messages)
+    # Тестове — кожну хвилину (тимчасово)
+    scheduler.add_job(
+        send_messages,
+        trigger=CronTrigger(minute="*/1"),
+        args=[bot, chat_id]
+    )
+
+    scheduler.start()
