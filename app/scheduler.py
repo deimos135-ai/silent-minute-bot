@@ -27,17 +27,10 @@ async def send_messages(bot, chat_id):
 async def setup_scheduler(bot, chat_id):
     scheduler = AsyncIOScheduler(timezone="Europe/Kyiv")
 
-    # Основне повідомлення о 8:55 (пн-пт)
+    # ✅ Основне повідомлення о 8:55 (пн-пт)
     scheduler.add_job(
         send_messages,
         trigger=CronTrigger(day_of_week='mon-fri', hour=8, minute=55),
-        args=[bot, chat_id]
-    )
-
-    # Тестове — кожну хвилину (тимчасово)
-    scheduler.add_job(
-        send_messages,
-        trigger=CronTrigger(minute="*/1"),
         args=[bot, chat_id]
     )
 
