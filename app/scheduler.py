@@ -30,7 +30,7 @@ async def setup_scheduler(bot, chat_id):
     # ✅ Основне повідомлення о 8:55 (пн-пт)
     scheduler.add_job(
         send_messages,
-        trigger=CronTrigger(day_of_week='mon-fri', hour=10, minute=10),
+        trigger=CronTrigger(day_of_week='mon-fri', hour=10, minute=12),
         args=[bot, chat_id]
     )
 
