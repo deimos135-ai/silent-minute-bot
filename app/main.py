@@ -3,7 +3,7 @@ import os
 from aiogram import Bot, Dispatcher, types
 from aiogram.enums.parse_mode import ParseMode
 from aiogram.filters import Command
-from scheduler import setup_scheduler, get_random_message
+from app.scheduler import setup_scheduler, get_random_message
 
 # ⏬ Отримуємо змінні з Fly.io секретів
 BOT_TOKEN = os.getenv("BOT_TOKEN")
