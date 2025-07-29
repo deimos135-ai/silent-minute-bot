@@ -2,8 +2,12 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
 import random
 import datetime
+import pytz
 
-# 🔔 Варіанти повідомлень
+# ⏰ Timezone Kyiv (через pytz)
+kyiv_tz = pytz.timezone("Europe/Kyiv")
+
+# 🔔 Повідомлення
 messages = [
     "🕯 Ранок. Хвилина мовчання — на честь Героїв. 🇺🇦 9:00",
     "🕯 Нагадування: о 9:00 — хвилина мовчання за полеглими.",
@@ -16,27 +20,32 @@ def get_random_message():
 
 # ✉️ Відправка повідомлення
 async def send_messages(bot, chat_id):
-    now = datetime.datetime.now().strftime('%H:%M:%S')
+    now_utc = datetime.datetime.utcnow().strftime('%H:%M:%S')
+    now_kyiv = datetime.datetime.now(kyiv_tz).strftime('%H:%M:%S')
     text = get_random_message()
     try:
-        print(f"[{now}] ⏳ Надсилаємо повідомлення в чат {chat_id}")
+        print(f"[UTC {now_utc} | Kyiv {now_kyiv}] ⏳ Надсилаємо повідомлення в чат {chat_id}")
         await bot.send_message(chat_id=chat_id, text=text)
-        print(f"[{now}] ✅ Повідомлення успішно надіслано")
+        print(f"[Kyiv {now_kyiv}] ✅ Повідомлення успішно надіслано")
     except Exception as e:
-        print(f"[{now}] ❌ ПОМИЛКА при надсиланні: {e}")
+        print(f"[Kyiv {now_kyiv}] ❌ ПОМИЛКА при надсиланні: {e}")
 
-# ⏱️ Налаштування планувальника
+# ⏱️ Планувальник
 async def setup_scheduler(bot, chat_id):
-    scheduler = AsyncIOScheduler(timezone="Europe/Kyiv")
+    scheduler = AsyncIOScheduler(timezone=kyiv_tz)
 
-    # Основне повідомлення (о 8:55 щодня, пн-пт)
+    # 🧪 ТЕСТОВЕ — кожну хвилину (видали перед продом)
     scheduler.add_job(
         send_messages,
-        trigger=CronTrigger(day_of_week='mon-fri', hour=10, minute=40),
+        trigger=CronTrigger(minute="*", timezone=kyiv_tz),
         args=[bot, chat_id]
     )
 
-    # 🧪 Тестове кожні 2 хвилини (видали в проді)
-    # scheduler.add_job(send_messages, CronTrigger(minute="*/2"), args=[bot, chat_id])
+    # 🕘 БОЙОВЕ — 8:55 Пн-Пт (закоментовано на час тесту)
+    # scheduler.add_job(
+    #     send_messages,
+    #     trigger=CronTrigger(day_of_week='mon-fri', hour=8, minute=55, timezone=kyiv_tz),
+    #     args=[bot, chat_id]
+    # )
 
     scheduler.start()
