@@ -5,8 +5,8 @@ from aiogram.enums.parse_mode import ParseMode
 from aiogram.filters import Command
 from .scheduler import setup_scheduler, get_random_message
 
-BOT_TOKEN = os.getenv("BOT_TOKEN_NEW")
-CHAT_ID = os.getenv("CHAT_ID")
+BOT_TOKEN = os.getenv("BOT_TOKEN")
+CHAT_ID = os.getenv("CHAT_ID_NEW")
 
 bot = Bot(token=BOT_TOKEN, parse_mode=ParseMode.HTML)
 dp = Dispatcher()
