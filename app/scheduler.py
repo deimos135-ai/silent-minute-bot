@@ -24,7 +24,7 @@ def job_send_random_message():
 def setup_scheduler():
     scheduler.add_job(
         job_send_random_message,
-        trigger=CronTrigger(day_of_week='mon-fri', hour=11, minute=02, timezone=kyiv_tz),
+        trigger=CronTrigger(day_of_week='mon-fri', hour=11, minute=6, timezone=kyiv_tz),
         id="daily_silent_minute"
     )
 
