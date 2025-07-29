@@ -7,7 +7,7 @@ from app.scheduler import setup_scheduler, get_random_message
 
 # ⏬ Отримуємо змінні з Fly.io секретів
 BOT_TOKEN = os.getenv("BOT_TOKEN")
-CHAT_ID_RAW = os.getenv("CHAT_ID_NEW")
+CHAT_ID_RAW = os.getenv("CHAT_ID")
 
 if not BOT_TOKEN or not CHAT_ID_RAW:
     raise RuntimeError("❌ BOT_TOKEN або CHAT_ID не встановлено у секретах Fly.io!")
