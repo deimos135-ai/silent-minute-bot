@@ -39,12 +39,12 @@ async def setup_scheduler(bot, chat_id):
       #  send_messages,
      #   trigger=CronTrigger(minute="*", timezone=kyiv_tz),
       #  args=[bot, chat_id]
-    )
+    #)
 
     # 🕘 БОЙОВЕ — 8:55 Пн-Пт (закоментовано на час тесту)
      scheduler.add_job(
          send_messages,
-         trigger=CronTrigger(day_of_week='mon-fri', hour=10, minute=56, timezone=kyiv_tz),
+         trigger=CronTrigger(day_of_week='mon-fri', hour=10, minute=58, timezone=kyiv_tz),
          args=[bot, chat_id]
      )
 
