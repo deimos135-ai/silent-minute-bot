@@ -49,7 +49,7 @@ async def setup_scheduler(bot, chat_id):
     # 🕘 Щодня з понеділка по п’ятницю о 08:55
     scheduler.add_job(
         send_messages,
-        trigger=CronTrigger(day_of_week='mon-fri', hour=8, minute=55, timezone=kyiv_tz),
+        trigger=CronTrigger(day_of_week='mon-fri', hour=7, minute=55, timezone=kyiv_tz),
         args=[bot, chat_id]
     )
 
