@@ -5,25 +5,23 @@ import pytz
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
 
-# Часовий пояс — Київ
 kyiv_tz = pytz.timezone("Europe/Kyiv")
 
-# Повідомлення
 messages = [
     "🕯 9:00 – загальнонаціональна хвилина мовчання. Присвятіть цю хвилину тим, хто віддав життя за Україну!",
 ]
 
-# Ротація повідомлень по дню
+
 def get_rotating_message():
     today = datetime.datetime.now(kyiv_tz).date()
     index = (today - datetime.date(2025, 1, 1)).days % len(messages)
     return messages[index]
 
-# Використовується в main.py для /ping
+
 def get_random_message():
     return get_rotating_message()
 
-# Надсилання повідомлення з повторними спробами
+
 async def send_messages(bot, chat_id):
     now_utc = datetime.datetime.utcnow().strftime("%H:%M:%S")
     now_kyiv = datetime.datetime.now(kyiv_tz).strftime("%H:%M:%S")
@@ -47,7 +45,7 @@ async def send_messages(bot, chat_id):
             else:
                 print(f"[Kyiv {now_kyiv}] ❌ Не вдалося надіслати повідомлення після {max_attempts} спроб")
 
-# Планувальник
+
 async def setup_scheduler(bot, chat_id):
     scheduler = AsyncIOScheduler(timezone=kyiv_tz)
 
