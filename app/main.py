@@ -1,11 +1,14 @@
 import asyncio
 import os
+
 from aiogram import Bot, Dispatcher, types
+from aiogram.client.session.aiohttp import AiohttpSession
 from aiogram.enums.parse_mode import ParseMode
 from aiogram.filters import Command
+
 from app.scheduler import setup_scheduler, get_random_message
 
-# ⏬ Отримуємо змінні з Fly.io секретів
+# Отримуємо змінні середовища
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 CHAT_ID_RAW = os.getenv("CHAT_ID")
 
@@ -19,21 +22,30 @@ except ValueError:
 
 print(f"✅ BOT запущено з CHAT_ID: {CHAT_ID}")
 
-# 🔧 Ініціалізація бота
-bot = Bot(token=BOT_TOKEN, parse_mode=ParseMode.HTML)
+# Сесія з більшим timeout, щоб менше було request timeout
+session = AiohttpSession(timeout=60)
+
+# Ініціалізація бота
+bot = Bot(
+    token=BOT_TOKEN,
+    session=session,
+    parse_mode=ParseMode.HTML
+)
+
 dp = Dispatcher()
 
-# 🔁 Команда для перевірки бота
+
 @dp.message(Command("ping"))
 async def ping_command(message: types.Message):
     test_message = get_random_message()
     await message.answer(f"✅ Бот працює!\n\n{test_message}")
 
-# 🧠 Основна логіка
+
 async def main():
     await setup_scheduler(bot, CHAT_ID)
     print("⏳ Очікуємо запланованих подій...")
     await dp.start_polling(bot)
+
 
 if __name__ == "__main__":
     asyncio.run(main())
